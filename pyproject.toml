@@ -29,7 +29,7 @@ approck-sqlalchemy-utils = { version = ">=0.1.0", extras = [
 ], optional = true }
 fastapi = { version = ">=0.111.0", optional = true }
 multimethod = "^1.11"
-pydantic = { version = ">=2.0", optional = true }
+pydantic = { version = ">=2.13.4", optional = true }
 python = "^3.10"
 
 [tool.poetry.extras]
