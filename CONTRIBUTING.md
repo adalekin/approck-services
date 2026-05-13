@@ -7,7 +7,7 @@ Thank you for considering a contribution to **approck-services**.
 1. Clone the repository and install dependencies with [uv](https://docs.astral.sh/uv/).
 
    ```bash
-   git clone https://github.com/approck-pro/approck-services.git
+   git clone https://github.com/adalekin/approck-services.git
    cd approck-services
    uv sync --all-extras --group dev
    ```

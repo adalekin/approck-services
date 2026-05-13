@@ -1,6 +1,6 @@
 # approck-services
 
-[![CI](https://github.com/approck-pro/approck-services/actions/workflows/ci.yml/badge.svg)](https://github.com/approck-pro/approck-services/actions/workflows/ci.yml)
+[![CI](https://github.com/adalekin/approck-services/actions/workflows/ci.yml/badge.svg)](https://github.com/adalekin/approck-services/actions/workflows/ci.yml)
 [![PyPI version](https://img.shields.io/pypi/v/approck-services.svg)](https://pypi.org/project/approck-services/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
