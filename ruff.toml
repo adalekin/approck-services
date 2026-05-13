@@ -1,0 +1,17 @@
+line-length = 120
+
+[lint.per-file-ignores]
+# multimethod overloads reuse the same function name; Ruff reports F811 otherwise.
+"approck_services/fastapi.py" = ["F811"]
+"approck_services/sqlalchemy/base.py" = ["F811"]
+
+[format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+

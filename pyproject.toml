@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "approck-services"
+version = "1.0.7"
+description = "Async SQLAlchemy and FastAPI service helpers, with optional S3-compatible uploads."
+authors = ["Aleksey Dalekin <ald@approck.pro>"]
+readme = "README.md"
+license = "MIT"
+keywords = ["async", "fastapi", "sqlalchemy", "service-layer", "s3", "aioboto3"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Typing :: Typed",
+]
+
+[tool.poetry.urls]
+Repository = "https://github.com/approck-pro/approck-services"
+"Bug Tracker" = "https://github.com/approck-pro/approck-services/issues"
+
+[tool.poetry.dependencies]
+aioboto3 = { version = ">=11.0.0", optional = true }
+approck-sqlalchemy-utils = { version = ">=0.1.0", extras = [
+    "postgres",
+], optional = true }
+fastapi = { version = ">=0.111.0", optional = true }
+multimethod = "^1.11"
+pydantic = { version = ">=2.0", optional = true }
+python = "^3.10"
+
+[tool.poetry.extras]
+fastapi = ["fastapi"]
+sqlalchemy = ["approck-sqlalchemy-utils", "pydantic"]
+upload = ["aioboto3"]
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.10.0"
+pre-commit = "^3.1.0"
+pytest = "^8.2.2"
+pytest-asyncio = "^0.23.6"
+ruff = "^0.4.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+show_error_codes = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "approck_services.sqlalchemy.base",
+    "approck_services.fastapi",
+]
+disable_error_code = ["no-redef", "misc", "attr-defined"]
