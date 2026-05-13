@@ -24,7 +24,7 @@ Repository = "https://github.com/approck-pro/approck-services"
 
 [tool.poetry.dependencies]
 aioboto3 = { version = ">=11.0.0", optional = true }
-approck-sqlalchemy-utils = { version = ">=0.1.0", extras = [
+approck-sqlalchemy-utils = { version = ">=0.1.5", extras = [
     "postgres",
 ], optional = true }
 fastapi = { version = ">=0.111.0", optional = true }
