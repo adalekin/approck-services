@@ -33,12 +33,10 @@ pip install "approck-services[sqlalchemy]"
 pip install "approck-services[upload]"
 ```
 
-With [Poetry](https://python-poetry.org/):
+With [uv](https://docs.astral.sh/uv/) in your own project (pick extras you need):
 
 ```bash
-poetry add approck-services
-poetry add "approck-services[sqlalchemy,fastapi]"
-poetry add "approck-services[upload]"
+uv add 'approck-services[sqlalchemy,fastapi,upload]'
 ```
 
 ## Usage

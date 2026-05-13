@@ -23,13 +23,13 @@ class AuthorORMService(make_service_type(Author, AuthorFilter)):
     pass
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_sqlalchemy_basic(fx_session: AsyncSession):
     author_service = AuthorService(session=fx_session)
     await author_service.find_one(id_=123)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_sqlalchemy_orm(fx_session: AsyncSession):
     author_service = AuthorORMService(session=fx_session)
     await author_service.filter(filter_=AuthorFilter(first_name="a"))

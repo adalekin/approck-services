@@ -18,7 +18,7 @@ def fx_apply_migrations():
         session.rollback()
 
 
-@pytest_asyncio.fixture(name="fx_session", autouse=True)
+@pytest_asyncio.fixture(name="fx_session", autouse=True, loop_scope="session")
 async def fx_session_impl() -> Iterator[AsyncSession]:
     async with approck_sqlalchemy_utils.session.context_session() as session:
         yield session

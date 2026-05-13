@@ -37,20 +37,22 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Poetry
-        run: pipx install poetry
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Install dependencies
-        run: poetry install --all-extras
+        run: uv sync --all-extras --group dev --python ${{ matrix.python-version }}
 
       - name: Ruff check
-        run: poetry run ruff check .
+        run: uv run ruff check .
 
       - name: Ruff format
-        run: poetry run ruff format --check .
+        run: uv run ruff format --check .
 
       - name: Mypy
-        run: poetry run mypy approck_services
+        run: uv run mypy approck_services
 
       - name: Pytest
-        run: poetry run pytest -v
+        run: uv run pytest -v
