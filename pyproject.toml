@@ -19,7 +19,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "multimethod>=1.11,<2",
+    "multimethod>=2.0.2,<3",
 ]
 
 [project.optional-dependencies]
