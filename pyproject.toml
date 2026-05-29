@@ -1,15 +1,11 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "approck-services"
-version = "1.0.7"
+version = "1.0.8"
 description = "Async SQLAlchemy and FastAPI service helpers, with optional S3-compatible uploads."
 readme = "README.md"
-license = "MIT"
+license = { file = "LICENSE" }
+authors = [{ name = "Aleksey Dalekin", email = "adalekin@gmail.com" }]
 requires-python = ">=3.10"
-authors = [{ name = "Aleksey Dalekin", email = "ald@approck.pro" }]
 keywords = ["async", "fastapi", "sqlalchemy", "service-layer", "s3", "aioboto3"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -35,8 +31,17 @@ sqlalchemy = [
 upload = ["aioboto3>=11.0.0"]
 
 [project.urls]
+Homepage = "https://github.com/adalekin/approck-services"
 Repository = "https://github.com/adalekin/approck-services"
-"Bug Tracker" = "https://github.com/adalekin/approck-services/issues"
+Issues = "https://github.com/adalekin/approck-services/issues"
+Changelog = "https://github.com/adalekin/approck-services/releases"
+
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+default-groups = ["dev"]
 
 [dependency-groups]
 dev = [
@@ -68,5 +73,4 @@ disable_error_code = ["no-redef", "misc", "attr-defined"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-# Explicit default; async fixtures that need the shared approck engine loop set loop_scope="session".
 asyncio_default_fixture_loop_scope = "function"

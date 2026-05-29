@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Type, cast
+from typing import Generic, Type, TypeVar, cast
 
 from approck_sqlalchemy_utils.mocks import get_session
 from approck_sqlalchemy_utils.model import Base

@@ -1,5 +1,5 @@
 from dataclasses import fields
-from typing import Any, Sequence, Generic, TypeVar, Tuple, Type, cast
+from typing import Any, Generic, Sequence, Tuple, Type, TypeVar, cast
 
 from approck_sqlalchemy_utils.model import Base
 from approck_sqlalchemy_utils.parsers import order_by
@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.expression import Delete, Select, Update
 
 from approck_services.base import BaseService
-from approck_services.sqlalchemy.abstract import AbstractSQLAlchemyService, AbstractORMSQLAlchemyService
+from approck_services.sqlalchemy.abstract import AbstractORMSQLAlchemyService, AbstractSQLAlchemyService
 
 ModelType = TypeVar("ModelType")
 FilterType = TypeVar("FilterType")

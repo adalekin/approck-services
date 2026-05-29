@@ -1,5 +1,8 @@
 line-length = 120
 
+[lint]
+extend-select = ["I"]
+
 [lint.per-file-ignores]
 # multimethod overloads reuse the same function name; Ruff reports F811 otherwise.
 "approck_services/fastapi.py" = ["F811"]

@@ -1,10 +1,10 @@
 from typing import Iterator
 
+import approck_sqlalchemy_utils.session
 import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import approck_sqlalchemy_utils.session
 from tests.models import Base
 
 approck_sqlalchemy_utils.session.init(url="postgresql+asyncpg://postgres:postgres@localhost:5432/postgres")

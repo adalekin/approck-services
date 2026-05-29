@@ -4,7 +4,10 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -12,11 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.12"]
 
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -32,27 +35,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
-      - name: Install dependencies
-        run: uv sync --all-extras --group dev --python ${{ matrix.python-version }}
+      - name: Install Python
+        run: uv python install ${{ matrix.python-version }}
 
-      - name: Ruff check
-        run: uv run ruff check .
+      - name: Sync dependencies
+        run: uv sync --all-extras --group dev --python ${{ matrix.python-version }} --frozen
 
-      - name: Ruff format
-        run: uv run ruff format --check .
+      - name: Ruff (lint)
+        run: uv run --python ${{ matrix.python-version }} ruff check .
+
+      - name: Ruff (format)
+        run: uv run --python ${{ matrix.python-version }} ruff format --check .
 
       - name: Mypy
-        run: uv run mypy approck_services
+        run: uv run --python ${{ matrix.python-version }} mypy approck_services
 
       - name: Pytest
-        run: uv run pytest -v
+        run: uv run --python ${{ matrix.python-version }} pytest
