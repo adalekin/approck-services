@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-fastapi = ["fastapi>=0.111.0"]
+fastapi = ["fastapi>=0.136.3"]
 sqlalchemy = [
     "approck-sqlalchemy-utils[postgres]>=0.1.0",
     "pydantic>=2.0",
