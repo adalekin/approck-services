@@ -18,10 +18,22 @@ FilterType = TypeVar("FilterType")
 
 
 class SQLAlchemyService(AbstractSQLAlchemyService, BaseService, Generic[ModelType]):
+    #: When True (default, 1.0.x behaviour) write methods commit their own transaction.
+    #: Set to False in a subclass to make the service commit-free: writes flush instead,
+    #: and the caller owns the transaction boundary. Flushing keeps the written rows
+    #: visible to later reads in the same session without ending the transaction.
+    autocommit: bool = True
+
     def __init__(self, session: AsyncSession) -> None:
         super().__init__()
 
         self.session = session
+
+    async def _finish(self) -> None:
+        if self.autocommit:
+            await self.session.commit()
+        else:
+            await self.session.flush()
 
     async def _create(self, instance: ModelType) -> ModelType:
         instance = await self._save(instance)
@@ -69,7 +81,7 @@ class SQLAlchemyService(AbstractSQLAlchemyService, BaseService, Generic[ModelTyp
         bind_arguments: Any = None,
     ) -> None:
         await self.session.execute(statement=statement, params=params, bind_arguments=bind_arguments)
-        await self.session.commit()
+        await self._finish()
 
     async def _delete(
         self,
@@ -82,19 +94,19 @@ class SQLAlchemyService(AbstractSQLAlchemyService, BaseService, Generic[ModelTyp
             params=params,
             bind_arguments=bind_arguments,
         )
-        await self.session.commit()
+        await self._finish()
 
     @overload
     async def _remove(self, instance: ModelType) -> None:
         await self.session.delete(instance)
-        await self.session.commit()
+        await self._finish()
 
     @overload
     async def _remove(self, instances: Sequence[ModelType]) -> None:
         for instance in instances:
             await self.session.delete(instance)
 
-        await self.session.commit()
+        await self._finish()
 
     @overload
     async def _pre_save(self, instance: ModelType, **kwargs) -> ModelType:
@@ -109,13 +121,13 @@ class SQLAlchemyService(AbstractSQLAlchemyService, BaseService, Generic[ModelTyp
     @overload
     async def _save(self, instance: ModelType, **kwargs) -> ModelType:
         instance = await self._pre_save(instance, **kwargs)
-        await self.session.commit()
+        await self._finish()
         return instance
 
     @overload
     async def _save(self, instances: Sequence[ModelType]) -> Sequence[ModelType]:
         instances = await self._pre_save(instances)
-        await self.session.commit()
+        await self._finish()
         return instances
 
 
@@ -123,10 +135,8 @@ class ORMSQLAlchemyService(AbstractORMSQLAlchemyService, SQLAlchemyService[Model
     RESERVED_FIELDS = ("order_by",)
 
     async def create(self, dto: BaseModel) -> ModelType:
-        instance = await self._create(self.model_cls(**dto.model_dump()))
-        await self.session.refresh(instance)
-
-        return instance
+        # ``_create`` already refreshes the persisted instance; no second refresh needed.
+        return await self._create(self.model_cls(**dto.model_dump()))
 
     async def filter_statement(self, filter_: FilterType) -> Tuple[AsyncSession, Select]:
         where = []

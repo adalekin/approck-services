@@ -96,6 +96,25 @@ UserService = make_service_type(User, UserFilter)
 
 The FastAPI variant is the same factory from **`approck_services.fastapi`**; **`filter_statement`** / **`create`** / etc. can be overridden in a subclass when you need **`selectinload`**, multi-table writes, or extra **`Depends`**. Call **`super().__init__(session)`** and keep **`session=Depends(get_session)`** aligned with the generated base.
 
+### Transaction boundary (`autocommit`)
+
+By default (**`autocommit = True`**) every write helper (**`create`**, **`update`**, **`update_indirect`**, **`delete`**, and the low-level **`_save` / `_update` / `_delete` / `_remove`**) commits its own transaction. This is the historical behaviour and stays the default, so existing code is unaffected.
+
+Set **`autocommit = False`** on a service subclass to make it **commit-free**: writes **flush** instead of committing, and the **caller owns the transaction boundary**. Flushing keeps written rows visible to later reads in the same session, so composing several services into one atomic operation no longer needs a `commit` flag threaded through the call chain.
+
+```python
+class UserService(make_service_type(User, UserFilter)):
+    autocommit = False
+
+
+# The caller opens the boundary; both writes commit together or not at all.
+async with session.begin():
+    user = await UserService(session).create(user_dto)
+    await ProfileService(session).create(profile_dto_for(user))
+```
+
+With **`autocommit = False`** the service never calls **`commit()`** or **`rollback()`** — that is the caller's responsibility (a request-level dependency, a consumer handler, a scheduler tick).
+
 ### Upload extra
 
 Install **`approck-services[upload]`** (pulls in **`aioboto3`**). Import **`approck_services.integrations.upload.BaseUploadService`**.
